@@ -6,22 +6,29 @@ import java.util.List;
 import com.example.taskmanagement.model.Task;
 import com.example.taskmanagement.model.TaskStatus;
 import com.example.taskmanagement.repository.TaskRepository;
+import com.example.taskmanagement.service.NotificationService;
 
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final NotificationService notificationService;
 
-    public TaskServiceImpl(TaskRepository taskRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository,
+                           NotificationService notificationService) {
         this.taskRepository = taskRepository;
+        this.notificationService = notificationService;
     }
-
     @Override
     public Task createTask(Task task) {
         task.setStatus(TaskStatus.TODO);
-        return taskRepository.save(task);
-    }
 
+        Task savedTask = taskRepository.save(task);
+
+        notificationService.sendTaskCreatedNotification(savedTask.getTitle());
+
+        return savedTask;
+    }
     @Override
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
