@@ -15,10 +15,21 @@ public class TaskController {
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
-
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public TaskResponseDTO createTask(@RequestBody TaskRequestDTO dto) {
+
+        Task task = new Task();
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+
+        Task savedTask = taskService.createTask(task);
+
+        TaskResponseDTO response = new TaskResponseDTO();
+        response.setId(savedTask.getId());
+        response.setTitle(savedTask.getTitle());
+        response.setStatus(savedTask.getStatus().name());
+
+        return response;
     }
 
     @GetMapping

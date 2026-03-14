@@ -20,7 +20,7 @@ public class TaskServiceImpl implements TaskService {
         this.notificationService = notificationService;
     }
     @Override
-    public Task createTask(@NotNull Task task) {
+    public Task createTask(Task task) {
         task.setStatus(TaskStatus.TODO);
 
         Task savedTask = taskRepository.save(task);
